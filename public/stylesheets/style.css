@@ -1,0 +1,48 @@
+body {
+  background-color: #b3f0ff;
+}
+
+#login {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+}
+
+h1 {
+  text-align: center;
+}
+
+input {
+  margin:auto;
+  display:block;
+  width: 40%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: rgba(5, 5, 5, 0.55);
+  font-size: 18px;
+  color: #fff;
+}
+
+input:focus {
+  background-color: rgba(25, 25, 25, 0.5);
+}
+
+button {
+  margin:auto;
+  display:block;
+  outline: none;
+  width: 15%;
+  margin-top: 15px;
+  height: 30px;
+  background-color: #4CAF50;
+  border: 0;
+  border-radius: 22.5px;
+  z-index: 999;
+  cursor: pointer;
+  font-size: 20px;
+  color: #000;
+}
