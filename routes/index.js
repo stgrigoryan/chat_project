@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/chat-room', function (req, res, next) {
     res.render('chat-room', {
-        title: 'chat room',
+        title: 'Chat room',
         nickname: req.query.nickname
     });
 });

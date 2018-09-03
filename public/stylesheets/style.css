@@ -15,10 +15,10 @@ h1 {
 }
 
 input {
-  margin:auto;
-  display:block;
-  width: 40%;
-  padding: 10px;
+  /*margin: auto;*/
+  /*display: block;*/
+  /*width: 40%;*/
+  /*padding: 10px;*/
   border: none;
   border-radius: 5px;
   outline: none;
@@ -27,11 +27,18 @@ input {
   color: #fff;
 }
 
-input:focus {
+#name {
+  margin: auto;
+  display: block;
+  width: 40%;
+  padding: 10px;
+}
+
+#name:focus {
   background-color: rgba(25, 25, 25, 0.5);
 }
 
-button {
+#enter {
   margin:auto;
   display:block;
   outline: none;
@@ -45,4 +52,55 @@ button {
   cursor: pointer;
   font-size: 20px;
   color: #000;
+}
+
+#chatbox {
+  text-align:left;
+  background: #e6f9ff;
+  border:2px solid #80bfff;
+  overflow:auto;
+  height: 100%;
+}
+
+#usermsg {
+  border: 1px solid #ACD8F0;
+  width: 427px;
+  padding: 10px 0;
+  margin-left: 220px;
+}
+
+#onlineusers {
+  float: left;
+  width: 210px;
+  background-color: #e6fffa;
+  border: 2px solid #73AD21;
+  height: 400px;
+  overflow-x: auto;
+  margin-right: 4px;
+}
+
+#room-messages {
+  margin-bottom: 25px;
+  height: 400px;
+}
+
+.room-width {
+  width: 750px;
+  margin: 0 90px;
+}
+
+#submitmsg {
+  margin:auto;
+  outline: none;
+  width: 95px;
+  margin-top: 15px;
+  height: 42px;
+  background-color: #4CAF50;
+  border: 0;
+  border-radius: 22.5px;
+  z-index: 999;
+  cursor: pointer;
+  font-size: 20px;
+  color: #000;
+
 }

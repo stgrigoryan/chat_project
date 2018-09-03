@@ -1,9 +1,25 @@
 <div id="login">
     <h1> Please enter a nickname</h1>
 
-    <input id="nickname" type="text" placeholder="...">
+    <input id="name" type="text" placeholder="...">
 
     <div>
         <button id="enter" onclick = "enterClick()">Enter</button>
     </div>
 </div>
+
+<div id="room">
+
+    <h1>Welcome to our chat</h1>
+
+    <div id="room-messages" class="room-width">
+        <div id="onlineusers"></div>
+        <div id="chatbox"></div>
+    </div>
+
+    <div class="room-width">
+        <input name="usermsg" type="text" id="usermsg" autocomplete="off"/>
+        <button id="submitmsg" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+

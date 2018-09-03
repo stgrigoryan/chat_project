@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
+    <title><%= typeof title !== 'undefined' ? title : '' %></title>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 </head>
 <body>
 
-<%-body%>
+<%- body %>
 
 <script src="/javascripts/client.js"></script>
 </body>

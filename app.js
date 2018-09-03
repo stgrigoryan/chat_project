@@ -46,11 +46,23 @@ const  server = app.listen(3030, () => {
   console.log (`Server started on port 3030`);
 });
 
-const ws = new WebSocket.Server({ server});
-ws.on('connection', r => {
-    r.on('message', m => {
-        console.log(m)
-    })
+
+const wss = new WebSocket.Server({ server});
+
+let messages = [];
+
+wss.on('connection', function (ws) {
+    messages.forEach(function(message){
+        ws.send(message);
+    });
+
+    ws.on('message', function (message) {
+        messages.push(message);
+        console.log('Message Received: %s', message);
+        wss.clients.forEach(function (conn) {
+            conn.send(message);
+        });
+    });
 });
 
 
