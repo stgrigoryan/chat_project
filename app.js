@@ -53,13 +53,22 @@ let messages = [];
 
 wss.on('connection', function (ws) {
     messages.forEach(function(message){
+        console.log( message);
         ws.send(message);
+    });
+    ws.on('typing', function (data) {
+        wss.clients.forEach(function (client) {
+            console.log ("AAAA" + data);
+            client.send(data);
+        });
     });
 
     ws.on('message', function (message) {
         messages.push(message);
         console.log('Message Received: %s', message);
         wss.clients.forEach(function (conn) {
+            // console.log("TTTT" + message);
+             console.log("UUUU" + messages);
             conn.send(message);
         });
     });

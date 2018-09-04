@@ -16,8 +16,28 @@ function enterClick() {
     ws.onmessage = function (msg) {
         let chatBox = document.getElementById("chatbox");
         let message = JSON.parse(msg.data);
+
+        //console.log(message);
+
+
+        onlineusers.innerHTML += "<b>" + message.user + "</b>" + "<br>" ;
         chatBox.innerHTML = "<b>" + message.user + "</b>:" + message.text + "<br>" + chatBox.innerHTML;
     };
+
+    let usermesg = document.getElementById("usermsg").value;
+    console.log(usermesg);
+
+    if (usermesg !== "" ) {
+        console.log (user + "is typing");
+        ws.send(JSON.stringify(user) + " is typing");
+    }
+
+    // usermsg.addEventListener("keypress", function () {
+    //
+    //     ws.send(JSON.stringify(user) + " is typing");
+    //
+    // });
+
 
     ws.onopen = function () {
         console.log(`Socket opened`);
@@ -34,6 +54,7 @@ function enterClick() {
     document.getElementById("login").setAttribute("style", "display:none");
     document.getElementById("room").setAttribute("style", "");
 }
+
 
 
 function sendMessage() {
