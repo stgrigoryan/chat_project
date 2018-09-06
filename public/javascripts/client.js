@@ -5,6 +5,7 @@ const url = "ws://" + window.location.host;
 let user;
 
 console.log(url);
+let count = 0;
 
 
 function enterClick() {
@@ -15,28 +16,37 @@ function enterClick() {
 
     ws.onmessage = function (msg) {
         let chatBox = document.getElementById("chatbox");
+
         let message = JSON.parse(msg.data);
+        console.log(message);
+        if (message.text == 'is typing') {
+            if(count == 0) {
+                chatBox.innerHTML = "<b>" + message.user + "</b>:" +"<i> "+ message.text + "</i>" + "<br>" + chatBox.innerHTML;
+            }
+            count++;
+        } else {
+            let lines = chatBox.innerHTML.split('<br>');
+            if(lines[0].includes('is typing')){
+                lines.splice(0, 1);
+                chatBox.innerHTML = lines.join('<br>')
+            }
+            chatBox.innerHTML = "<b>" + message.user + "</b>:" + message.text + "<br>" + chatBox.innerHTML;
+            count = 0;
 
-        //console.log(message);
-
-
-        onlineusers.innerHTML += "<b>" + message.user + "</b>" + "<br>" ;
-        chatBox.innerHTML = "<b>" + message.user + "</b>:" + message.text + "<br>" + chatBox.innerHTML;
+        }
     };
 
     let usermesg = document.getElementById("usermsg").value;
     console.log(usermesg);
 
-    if (usermesg !== "" ) {
-        console.log (user + "is typing");
-        ws.send(JSON.stringify(user) + " is typing");
-    }
 
-    // usermsg.addEventListener("keypress", function () {
-    //
-    //     ws.send(JSON.stringify(user) + " is typing");
-    //
-    // });
+    usermsg.addEventListener("keypress", function () {
+        let message = {};
+        message.user = user;
+        message.text = 'is typing';
+        ws.send(JSON.stringify(message));
+
+    });
 
 
     ws.onopen = function () {
@@ -45,6 +55,7 @@ function enterClick() {
         message.user = user;
         message.text = " <b>Joined the chat </b>";
         ws.send(JSON.stringify(message));
+        onlineusers.innerHTML += "<b>" + message.user + "</b>" + "<br>" ;
 
     };
 

@@ -53,26 +53,24 @@ let messages = [];
 
 wss.on('connection', function (ws) {
     messages.forEach(function(message){
-        console.log( message);
+        console.log(message);
         ws.send(message);
     });
-    ws.on('typing', function (data) {
-        wss.clients.forEach(function (client) {
-            console.log ("AAAA" + data);
-            client.send(data);
-        });
-    });
 
-    ws.on('message', function (message) {
-        messages.push(message);
-        console.log('Message Received: %s', message);
+    ws.on('message', function (data) {
+        let dataObj = JSON.parse(data);
+        console.log(dataObj);
+        if (data.includes('typing') ) {
+            wss.clients.forEach(function (conn) {
+                    conn.send(data);
+            });
+        }
+        messages.push(data);
+        console.log('Message Received: %s', data);
         wss.clients.forEach(function (conn) {
-            // console.log("TTTT" + message);
-             console.log("UUUU" + messages);
-            conn.send(message);
+            conn.send(data);
         });
     });
 });
-
 
 
