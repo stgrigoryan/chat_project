@@ -7,12 +7,19 @@ let user;
 console.log(url);
 let count = 0;
 
+let ws;
+
 
 function enterClick() {
 
-    ws = new WebSocket (url);
 
-    user = document.getElementById("name").value;
+   ws = new WebSocket (url);
+
+    user = document.getElementById("name").value ;
+
+        if (user === "" || user === " ") {
+            return alert("Please enter a valid nickname!!!");
+        }
 
     ws.onmessage = function (msg) {
         let chatBox = document.getElementById("chatbox");
@@ -59,7 +66,6 @@ function enterClick() {
 
     };
 
-   // window.location = "http://localhost:3030/chat-room?" + (Math.random() * 10);
 
     document.getElementById("name").value = '';
     document.getElementById("login").setAttribute("style", "display:none");
@@ -77,6 +83,13 @@ function sendMessage() {
 
     ws.send(JSON.stringify(message));
     document.getElementById("usermsg").value = "";
+
+    ws.onclose = function () {
+        console.log('Websocket is closed!');
+    };
+    ws.onerror = function () {
+        console.log('An error occurred');
+    };
 
 }
 
