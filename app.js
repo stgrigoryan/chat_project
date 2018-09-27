@@ -10,6 +10,11 @@ const expressLayouts = require('express-ejs-layouts');
 
 const indexRouter = require('./routes/index');
 
+const mongoose = require('mongoose');
+const db = mongoose.createConnection('mongodb://localhost:27017/chat');
+const MessagesSchema = require('./models/message');
+const Messages = db.model('messages', MessagesSchema);
+
 const app = express();
 
 // view engine setup
@@ -28,49 +33,47 @@ app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 const  server = app.listen(3030, () => {
-  console.log (`Server started on port 3030`);
+    console.log (`Server started on port 3030`);
 });
 
 
 const wss = new WebSocket.Server({ server});
 
-let messages = [];
+// messages = [];
 
 wss.on('connection', function (ws) {
-    messages.forEach(function(message){
-        console.log(message);
-        ws.send(message);
-    });
-
-    ws.on('message', function (data) {
-        let dataObj = JSON.parse(data);
-        console.log(dataObj);
-        if (data.includes('typing') ) {
-            wss.clients.forEach(function (conn) {
+    Messages.find((err, msgs) => {
+        (msgs || []).forEach(msg => ws.send(JSON.stringify(msg)));
+        ws.on('message', function (data) {
+            let dataObj = JSON.parse(data);
+            console.log(dataObj);
+            if (data.includes('typing') ) {
+                wss.clients.forEach(function (conn) {
                     conn.send(data);
+                });
+            } else {
+                Messages.create(dataObj);
+            }
+            //messages.push(data);
+            console.log('Message Received: %s', data);
+            wss.clients.forEach(function (conn) {
+                conn.send(data);
             });
-        }
-        messages.push(data);
-        console.log('Message Received: %s', data);
-        wss.clients.forEach(function (conn) {
-            conn.send(data);
         });
     });
 });
-
-
