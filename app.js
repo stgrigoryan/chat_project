@@ -13,7 +13,9 @@ const indexRouter = require('./routes/index');
 const mongoose = require('mongoose');
 const db = mongoose.createConnection('mongodb://localhost:27017/chat');
 const MessagesSchema = require('./models/message');
+const UsersSchema = require('./models/users');
 const Messages = db.model('messages', MessagesSchema);
+const Users = db.model('users', UsersSchema);
 
 const app = express();
 
@@ -56,9 +58,27 @@ const wss = new WebSocket.Server({ server});
 
 // messages = [];
 
+function findOrCreateUser(username, cb) {
+    Users.findOne({username: username}, user => {
+        if (!user) {
+            Users.create({username: username}, (err, user) => {
+                console.log(user);
+                cb(user._id);
+            });
+        } else {
+            cb(user._id);
+        }
+    })
+}
+
 wss.on('connection', function (ws) {
-    Messages.find((err, msgs) => {
-        (msgs || []).forEach(msg => ws.send(JSON.stringify(msg)));
+    Messages.find()
+        .populate('user')
+        .exec((err, msgs) => {
+        (msgs || []).forEach(msg => {
+            console.log('message == ', msg);
+            ws.send(JSON.stringify({text: msg.text, user: msg.user.username}))
+        });
         ws.on('message', function (data) {
             let dataObj = JSON.parse(data);
             console.log(dataObj);
@@ -67,11 +87,34 @@ wss.on('connection', function (ws) {
                     conn.send(data);
                 });
             } else {
-                Messages.create(dataObj);
+                findOrCreateUser(dataObj.user, (user_id) => {
+                    Messages.create({text: dataObj.text, user: user_id});
+                });
             }
+
+            // zugaher ashxarh
+            // jnjel heto
+            // console.log(1);
+            // Users.findOne({username: dataObj.user}, (user_doc) => {
+            //     console.log(2);
+            //     if (!user) {
+            //         console.log(3);
+            //         Users.create({username: dataObj.user}, (new_user_doc) => {
+            //             console.log(4);
+            //             Messages.create({text: dataObj.text, user: new_user_doc._id});
+            //         })
+            //     } else {
+            //         console.log(5);
+            //         Messages.create({text: dataObj.text, user: user_doc._id});
+            //     }
+            //     console.log(6)
+            // });
+            // console.log(7);
+
+
             //messages.push(data);
             console.log('Message Received: %s', data);
-            wss.clients.forEach(function (conn) {
+            wss.clients.forEach( conn => {
                 conn.send(data);
             });
         });
